@@ -3,3 +3,16 @@ services:
     image: valkey/valkey
     ports:
       - "6379:6379"
+  
+  worker:
+    build:
+      context: ..
+      dockerfile: ragQueue/Dockerfile
+    command: rq worker
+    depends_on:
+      - valkey
+    environment:
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+    volumes:
+      - ..:/app
